@@ -1,20 +1,33 @@
 #include "main.h"
 
 /**
- * print_string - Print string
- * @list: list.
- *
- * Return: String length.
+ * parse_str - writes the string
+ * @buff_dest: character string
+ * @arg: list of arguments
+ * @buff_count: index f buffer pointer
+ * Return: The number of characters printed.
  */
-
-int print_string(va_list list)
+int parse_str(char *buff_dest, va_list arg, int buff_count)
 {
-	char *p;
-	int p_len;
+	char *str;
+	int i = 0;
 
-	p = va_arg(list, char*);
-	p_len = print((p != NULL) ? p : "(null)");
+	str = va_arg(arg, char *);
+	if (str == NULL)
+		str = "(null)";
 
-	return (p_len);
+	if (str[0] == '\0')
+	{
+		buff_dest[buff_count] = '\0';
+		buff_count++;
+	}
+
+	while (str[i] != '\0')
+	{
+		buff_dest[buff_count] = str[i];
+		i++;
+		buff_count++;
+	}
+
+	return (buff_count);
 }
-
