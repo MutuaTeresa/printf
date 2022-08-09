@@ -1,25 +1,53 @@
 #include "main.h"
 
 /**
- * print_address - prints address of input in hexa format
- * @l: va_list arguments from _printf
- * @f: pointer to the struct flags that determines
- * if a flag is passed to _printf
- * Return: number of char printed
+ * print_address - prints the address
+ * of variables and pointers
+ *
+ * @args: the arguments
+ * @buffer: memory space
+ *
+ * Return: number of printed
+ * bytes
  */
-int print_address(va_list l, flags_t *f)
+
+int print_address(va_list args, char *buffer)
 {
-	char *str;
-	unsigned long int p = va_arg(l, unsigned long int);
+	unsigned long int addr, a, b = 1;
+	unsigned int i = 0;
+	char lett;
 
-	register int count = 0;
 
-	(void)f;
+	addr = va_arg(args, unsigned long int);
 
-	if (!p)
-		return (_puts("(nil)"));
-	str = convert(p, 16, 1);
-	count += _puts("0x");
-	count += _puts(str);
-	return (count);
+	if (addr == 0)
+	{
+		buffer[i] = '0', i++;
+		return (_print_buf(buffer, i));
+	}
+	if (!addr)
+	{
+		buffer = "(nil)";
+		return (_print_buf(buffer, 5));
+	}
+	a = addr;
+	buffer[i] = '0', i++, buffer[i] = 'x', i++;
+	while (a > 15)
+	{
+		b *= 16;
+		a /= 16;
+	}
+
+	for (; b > 0; b /= 16)
+	{
+		a = (addr / b);
+
+		if (a < 9)
+			lett = (a + '0');
+		else
+			lett = ((a + 39) + '0');
+		buffer[i] = lett, i++, addr %= b;
+	}
+
+	return (_print_buf(buffer, i));
 }
