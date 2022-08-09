@@ -2,7 +2,7 @@
 
 
 /**
- * print_int - prints signed integer number
+ * print_int - prints signed integer numbers
  *
  * @args: argument of integer type
  * @buffer: pointer of 1byte size
