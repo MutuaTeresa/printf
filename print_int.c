@@ -2,7 +2,11 @@
 
 
 /**
+<<<<<<< HEAD
  * print_int - prints signed integer number
+=======
+ * print_int - prints signed integer numbers
+>>>>>>> b9bc0df810fab3be0478363c05bb022678d13a6d
  *
  * @args: argument of integer type
  * @buffer: pointer of 1byte size
