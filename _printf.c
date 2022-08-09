@@ -1,54 +1,78 @@
-#include "holberton.h"
+#include "main.h"
+
 
 /**
- * _printf - Function that prints formatted output.
- *
- * @format: a string composed of zero or more characters to print or use as
- * directives that handle subsequent arguments and special characters.
- *
- * Description: This function can take a variable number and type of arguments
- * that should be printed to standard output.
- *
- * Return: int
+ * print_letter - prints single letter
+ * @format: the string format
+ * @index: index of the letterin the format
+ * Return: 1(length of the letter)
  */
+
+int print_letter(const char *format, int index)
+{
+	char *str;
+	int l;
+
+	str = malloc(sizeof(char));
+
+	if (str == NULL)
+		return (-1);
+	str[0] = format[index];
+
+	l = _print_buf(str, 1);
+	free(str);
+
+	return (l);
+}
+
+/**
+ * _printf - formated output and data conversation
+ *
+ * @format: the input string
+ *
+ * Return: number of characters printed
+ */
+
 int _printf(const char *format, ...)
 {
+	int i, len = 0, (*f)(va_list, char *), flag = 0;
+	char *buffer;
 	va_list args;
-	int i = 0, chars_printed = 0;
 
 	va_start(args, format);
-	while (format && format[i])
+	if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	for (i = 0; format && format[i] != '\0'; i++)
 	{
-		if (format[i] != '%')
+		if (format[i] == '%')
 		{
-			chars_printed += _putchar(format[i]);
-		}
-		else if (format[i + 1])
-		{
-			i++;
-			if (format[i] == 'c' || format[i] == 's')
-				chars_printed += format[i] == 'c' ? _putchar(va_arg(args, int)) :
-				print_string(va_arg(args, char *));
-			else if (format[i] == 'd' || format[i] == 'i')
-				chars_printed += print_num(va_arg(args, int));
-			else if (format[i] == 'b')
-				chars_printed += print_binary((unsigned int)va_arg(args, int));
-			else if (format[i] == 'r')
-				chars_printed += print_reverse(va_arg(args, char *));
-			else if (format[i] == 'R')
-				chars_printed += print_rot13(va_arg(args, char *));
-			else if (format[i] == 'o' || format[i] == 'u' ||
-			format[i] == 'x' || format[i] == 'X')
-				chars_printed += print_odh(format[i], (unsigned int)va_arg(args, int));
-			else if (format[i] == 'S')
-				chars_printed += print_S(va_arg(args, char *));
-			else if (format[i] == 'p')
-				chars_printed += print_pointer(va_arg(args, void *));
+			f = get_pnt_funct(format, &i);
+			if (!f)
+			{
+				if ((format[i] == '\0') && flag == 0)
+				{
+					va_end(args);
+					return (-1);
+				}
+				else if (format[i] == '%')
+					len += print_letter(format, i);
+				else
+					len += print_letter(format, i - 1), flag = 1, i--;
+			}
 			else
-				chars_printed += print_unknown_spec(format[i]);
+			{
+				buffer = malloc(sizeof(char) * 1024);
+				if (buffer == NULL)
+				{
+					va_end(args);
+					return (-1);
+				}
+				len += f(args, buffer), free(buffer);
+			}
 		}
-		i++;
+		else
+			len += print_letter(format, i);
 	}
 	va_end(args);
-	return (chars_printed);
+	return (len);
 }
