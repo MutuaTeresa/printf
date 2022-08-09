@@ -1,49 +1,40 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef _MAIN_H_
+#define _MAIN_H_
+#define INT_BITS (4 * 8)
 
+#include <stdarg.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdarg.h>
-
-/* utils.c */
-int _strlen(const char *);
-int print(char *);
-char *itoa(long int, int);
-
-/* printf.c */
-int _printf(const char *, ...);
-
-/* handler.c */
-int handler(const char *, va_list);
-int percent_handler(const char *, va_list, int *);
-
-/* printers */
-int parse_str(char *buff_dest, va_list arg, int buff_count);
-int print_char(va_list);
-int print_integer(va_list);
-int print_binary(va_list);
-int print_rot(va_list);
-int print_unsigned(va_list);
-int print_octal(va_list);
-int print_hexadecimal_low(va_list);
-int print_hexadecimal_upp(va_list);
-int print_pointer(va_list);
-int print_rev_string(va_list);
-
-/* _putchar.c */
-int _putchar(char);
-int buffer(char);
+#include <stdio.h>
+#include <limits.h>
 
 /**
- * struct _format - Typedef struct
+ * struct call - struct call
+ * @t: t - flag for data type
+ * @f: function - assocated function
  *
- * @type: Format
- * @f: The function associated
- **/
-typedef struct _format
+ */
+typedef struct call
 {
-	char type;
-	int (*f)(va_list);
-} format;
+	char t;
+	int (*f)(char *, va_list, int);
+} call_t;
+
+int _printf(const char *format, ...);
+int buff_append(char *buff_dest, va_list arg, int buff_count, char type);
+int print_buff(char *buff, unsigned int nbuff);
+int str_len(char *s);
+char *_strcpy(char *dest, char *src);
+int parse_char(char *buff_dest, va_list arg, int buff_count);
+int parse_str(char *buff_dest, va_list arg, int buff_count);
+int parse_int(char *buff_dest, va_list list, int buff_count);
+int parse_perc(char *buff_dest, va_list arg, int buff_count);
+int parse_bin(char *buff_dest, va_list arg, int buff_count);
+int parse_oct(char *buff_dest, va_list arg, int buff_count);
+int parse_hex(char *buff_dest, va_list arg, int buff_count);
+int parse_X(char *buff_dest, va_list arg, int buff_count);
+int parse_uint(char *buff_dest, va_list arg, int buff_count);
+int parse_rev(char *buff_dest, va_list arg, int buff_count);
+int parse_R13(char *buff_dest, va_list arg, int buff_count);
 
 #endif
